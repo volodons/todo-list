@@ -10,24 +10,30 @@
     <script src="./scripts/script.js" defer></script>
   </head>
   <body>
-    <main>
-      <header>Grocery Bud</header>
-      <form>
-        <input type="text" />
-        <button type="submit"></button>
+    <main class="list">
+      <h1 class="list__header">Grocery Bud</h1>
+      <form class="list__form">
+        <input class="list__form-input" type="text" placeholder="e.g. eggs" />
+        <button class="list__form-button" type="submit">Save</button>
       </form>
-      <ul>
-        <li>
-          <span>Item</span>
-          <img src="./images/icon-edit.svg" alt="Edit Item" title="Edit Item" />
+      <ul class="list-items-wrapper">
+        <li class="list__item">
+          <span class="list__item-text">Item</span>
           <img
+            class="list__item-icon"
+            src="./images/icon-edit.svg"
+            alt="Edit Item"
+            title="Edit Item"
+          />
+          <img
+            class="list__item-icon"
             src="./images/icon-delete.svg"
             alt="Delete Item"
             title="Delete Item"
           />
         </li>
       </ul>
-      <footer>
+      <footer class="list__footer">
         <a>Clear Items</a>
       </footer>
     </main>
