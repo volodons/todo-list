@@ -30,6 +30,11 @@ body {
   border: none;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
+  color: #617d98;
+}
+
+.list__form-input::placeholder {
+  color: #617d98;
 }
 
 .list__form-button {
@@ -54,6 +59,7 @@ body {
 
 .list__item-text {
   margin-right: auto;
+  color: #112942;
 }
 
 .list__item-icon {
@@ -64,5 +70,5 @@ body {
 
 .list__footer {
   text-align: center;
-  color: red;
+  color: #f44336;
 }/*# sourceMappingURL=style.css.map */
