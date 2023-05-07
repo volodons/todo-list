@@ -17,7 +17,9 @@ let counter = 0;
 
 // Add new item to list
 function addItem() {
-  if (formInput.value !== "") {
+  if (!formInput.value || /^\s+$/.test(formInput.value)) {
+    event.preventDefault();
+  } else {
     counter++;
     event.preventDefault();
     let itemText = formInput.value;
@@ -46,8 +48,6 @@ function addItem() {
     const deleteButton = document.getElementById(`deleteButton${counter}`);
     deleteButton.addEventListener("click", () => deleteItem(item));
     formInput.value = "";
-  } else {
-    event.preventDefault();
   }
 }
 
