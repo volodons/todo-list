@@ -5,6 +5,9 @@ const formButton = document.getElementById("formButton");
 const listItems = document.getElementById("listItems");
 const deleteAllButton = document.getElementById("deleteAllButton");
 
+// Set initial input focus
+formInput.focus();
+
 // Add event listeners to form and button
 form.addEventListener("submit", addItem);
 deleteAllButton.addEventListener("click", deleteAllItems);
@@ -53,6 +56,7 @@ function editItem(item) {
   });
   form.removeEventListener("submit", addItem);
   form.addEventListener("submit", saveItem);
+  formInput.focus();
   formInput.value = item.querySelector(".list__item-text").innerText;
   formButton.innerText = "Save";
 
