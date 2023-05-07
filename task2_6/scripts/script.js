@@ -33,7 +33,12 @@ function submitItem(event) {
     />`;
   listItems.append(item);
   const deleteButton = document.getElementById("deleteButton");
-  deleteButton.addEventListener("click", deleteItem);
+  deleteButton.addEventListener("click", () => deleteItem(item));
+}
+
+// Delete item in list
+function deleteItem(item) {
+  item.remove();
 }
 
 // Delete all items in list
