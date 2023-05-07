@@ -12,29 +12,18 @@
   <body>
     <main class="list">
       <h1 class="list__header">Grocery Bud</h1>
-      <form class="list__form">
-        <input class="list__form-input" type="text" placeholder="e.g. eggs" />
+      <form id="submitForm" class="list__form">
+        <input
+          id="submitFormInput"
+          class="list__form-input"
+          type="text"
+          placeholder="e.g. eggs"
+        />
         <button class="list__form-button" type="submit">Save</button>
       </form>
-      <ul class="list-items-wrapper">
-        <li class="list__item">
-          <span class="list__item-text">Item</span>
-          <img
-            class="list__item-icon"
-            src="./images/icon-edit.svg"
-            alt="Edit Item"
-            title="Edit Item"
-          />
-          <img
-            class="list__item-icon"
-            src="./images/icon-delete.svg"
-            alt="Delete Item"
-            title="Delete Item"
-          />
-        </li>
-      </ul>
+      <ul id="listItems" class="list-items-wrapper"></ul>
       <footer class="list__footer">
-        <a>Clear Items</a>
+        <a id="deleteAllButton">Clear Items</a>
       </footer>
     </main>
   </body>
