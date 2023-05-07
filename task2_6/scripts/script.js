@@ -7,6 +7,7 @@ const deleteAllButton = document.getElementById("deleteAllButton");
 
 // Add event listeners to buttons
 submitForm.addEventListener("submit", submitItem);
+deleteAllButton.addEventListener("click", deleteAllItems);
 
 // Submits an item to list
 function submitItem(event) {
@@ -33,4 +34,9 @@ function submitItem(event) {
   listItems.append(item);
   const deleteButton = document.getElementById("deleteButton");
   deleteButton.addEventListener("click", deleteItem);
+}
+
+// Delete all items in list
+function deleteAllItems() {
+  listItems.innerHTML = "";
 }
