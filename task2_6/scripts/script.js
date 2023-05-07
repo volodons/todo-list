@@ -9,8 +9,12 @@ const deleteAllButton = document.getElementById("deleteAllButton");
 submitForm.addEventListener("submit", submitItem);
 deleteAllButton.addEventListener("click", deleteAllItems);
 
+// Counter for each new item
+let counter = 0;
+
 // Submits an item to list
 function submitItem(event) {
+  counter++;
   event.preventDefault();
   const itemText = submitFormInput.value;
   const item = document.createElement("li");
@@ -25,18 +29,18 @@ function submitItem(event) {
       title="Edit Item"
     />
     <img
-      id="deleteButton"
+      id="deleteButton${counter}"
       class="list__item-icon"
       src="./images/icon-delete.svg"
       alt="Delete Item"
       title="Delete Item"
     />`;
   listItems.append(item);
-  const deleteButton = document.getElementById("deleteButton");
+  const deleteButton = document.getElementById(`deleteButton${counter}`);
   deleteButton.addEventListener("click", () => deleteItem(item));
 }
 
-// Delete item in list
+// Delete item from a list
 function deleteItem(item) {
   item.remove();
 }
