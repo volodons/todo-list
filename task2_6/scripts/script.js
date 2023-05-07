@@ -17,13 +17,14 @@ let counter = 0;
 
 // Add new item to list
 function addItem() {
-  counter++;
-  event.preventDefault();
-  let itemText = formInput.value;
-  let item = document.createElement("li");
-  item.id = `item${counter}`;
-  item.classList.add("list__item");
-  item.innerHTML = `        
+  if (formInput.value !== "") {
+    counter++;
+    event.preventDefault();
+    let itemText = formInput.value;
+    let item = document.createElement("li");
+    item.id = `item${counter}`;
+    item.classList.add("list__item");
+    item.innerHTML = `        
     <span class="list__item-text">${itemText}</span>
     <img
       id="editButton${counter}"
@@ -39,12 +40,15 @@ function addItem() {
       alt="Delete Item"
       title="Delete Item"
     />`;
-  listItems.append(item);
-  const editButton = document.getElementById(`editButton${counter}`);
-  editButton.addEventListener("click", () => editItem(item));
-  const deleteButton = document.getElementById(`deleteButton${counter}`);
-  deleteButton.addEventListener("click", () => deleteItem(item));
-  formInput.value = "";
+    listItems.append(item);
+    const editButton = document.getElementById(`editButton${counter}`);
+    editButton.addEventListener("click", () => editItem(item));
+    const deleteButton = document.getElementById(`deleteButton${counter}`);
+    deleteButton.addEventListener("click", () => deleteItem(item));
+    formInput.value = "";
+  } else {
+    event.preventDefault();
+  }
 }
 
 // Edit item
