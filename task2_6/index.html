@@ -12,14 +12,16 @@
   <body>
     <main class="list">
       <h1 class="list__header">Grocery Bud</h1>
-      <form id="submitForm" class="list__form">
+      <form id="form" class="list__form">
         <input
-          id="submitFormInput"
+          id="formInput"
           class="list__form-input"
           type="text"
           placeholder="e.g. eggs"
         />
-        <button class="list__form-button" type="submit">Save</button>
+        <button id="formButton" class="list__form-button" type="submit">
+          Add
+        </button>
       </form>
       <ul id="listItems" class="list-items-wrapper"></ul>
       <footer class="list__footer">
