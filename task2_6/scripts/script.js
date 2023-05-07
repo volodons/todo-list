@@ -44,6 +44,7 @@ function addItem() {
   editButton.addEventListener("click", () => editItem(item));
   const deleteButton = document.getElementById(`deleteButton${counter}`);
   deleteButton.addEventListener("click", () => deleteItem(item));
+  formInput.value = "";
 }
 
 // Edit item
@@ -73,6 +74,7 @@ function editItem(item) {
       icon.style.filter = "none";
       icon.style.cursor = "pointer";
     });
+    formInput.value = "";
   }
 }
 
