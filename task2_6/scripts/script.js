@@ -17,24 +17,16 @@ deleteAllButton.addEventListener("click", deleteAllItems);
 // Set counter for each new item
 let counter = 0;
 
-// Set array for items
+// Set array of items
 let items = [];
 
 function initialItemRender() {
   let allCookies = document.cookie.split(";");
-  console.log(allCookies);
-
   let itemsCookies = allCookies.find((cookie) =>
     cookie.trim().startsWith("list-items=")
   );
-  console.log(itemsCookies);
-
   let itemsCookiesJSON = itemsCookies.split("=")[1];
-  console.log(itemsCookiesJSON);
-
   let items = JSON.parse(itemsCookiesJSON);
-  console.log(items);
-
   for (let i = 0; i < items.length; i++) {
     let item = document.createElement("li");
     item.classList.add("list__item");
@@ -101,11 +93,8 @@ function addItem() {
 
     // Work with cookies
     items.push(itemText);
-    console.log(items);
     let itemsJSON = JSON.stringify(items);
-    console.log(itemsJSON);
     document.cookie = `list-items=${itemsJSON}; expires=Sat, 01 Jul 2023 00:00:00 UTC; path=/;`;
-    console.log(document.cookie);
   }
 }
 
