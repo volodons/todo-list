@@ -69,8 +69,8 @@ function addItem() {
   if (!formInput.value || /^\s+$/.test(formInput.value)) {
     event.preventDefault();
   } else {
-    counter++;
     event.preventDefault();
+    counter++;
     let itemText = formInput.value;
     let item = document.createElement("li");
     item.id = `item${counter}`;
