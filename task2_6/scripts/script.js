@@ -97,17 +97,14 @@ function addItem() {
     const deleteButton = document.getElementById(`deleteButton${counter}`);
     deleteButton.addEventListener("click", () => deleteItem(item));
     formInput.value = "";
+    formInput.focus();
 
     // Work with cookies
     items.push(itemText);
     console.log(items);
     let itemsJSON = JSON.stringify(items);
     console.log(itemsJSON);
-
-    const date = new Date();
-    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = `list-items=${itemsJSON}; ` + expires + "path=/";
+    document.cookie = `list-items=${itemsJSON}; expires=Sat, 01 Jul 2023 00:00:00 UTC; path=/;`;
     console.log(document.cookie);
   }
 }
@@ -144,11 +141,13 @@ function editItem(item) {
 
 // Delete item from a list
 function deleteItem(item) {
+  counter--;
   item.remove();
 }
 
 // Delete all items in list
 function deleteAllItems() {
+  counter = 0;
   listItems.innerHTML = "";
   document.cookie = `list-items=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
