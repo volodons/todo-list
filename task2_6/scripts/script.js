@@ -94,7 +94,10 @@ function addItem() {
     // Work with cookies
     items.push(itemText);
     let itemsJSON = JSON.stringify(items);
-    document.cookie = `list-items=${itemsJSON}; expires=Sat, 01 Jul 2023 00:00:00 UTC; path=/;`;
+    const date = new Date();
+    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `list-items=${itemsJSON}; ` + expires + "path=/";
   }
 }
 
