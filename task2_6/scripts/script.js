@@ -60,14 +60,14 @@ initialItemRender();
 function addItem() {
   if (!formInput.value || /^\s+$/.test(formInput.value)) {
     event.preventDefault();
-  } else {
-    event.preventDefault();
-    counter++;
-    let itemText = formInput.value;
-    let item = document.createElement("li");
-    item.id = `item${counter}`;
-    item.classList.add("list__item");
-    item.innerHTML = `        
+  }
+  event.preventDefault();
+  counter++;
+  let itemText = formInput.value;
+  let item = document.createElement("li");
+  item.id = `item${counter}`;
+  item.classList.add("list__item");
+  item.innerHTML = `        
     <span class="list__item-text">${itemText}</span>
     <img
       id="editButton${counter}"
@@ -83,22 +83,21 @@ function addItem() {
       alt="Delete Item"
       title="Delete Item"
     />`;
-    listItems.append(item);
-    const editButton = document.getElementById(`editButton${counter}`);
-    editButton.addEventListener("click", () => editItem(item));
-    const deleteButton = document.getElementById(`deleteButton${counter}`);
-    deleteButton.addEventListener("click", () => deleteItem(item));
-    formInput.value = "";
-    formInput.focus();
+  listItems.append(item);
+  const editButton = document.getElementById(`editButton${counter}`);
+  editButton.addEventListener("click", () => editItem(item));
+  const deleteButton = document.getElementById(`deleteButton${counter}`);
+  deleteButton.addEventListener("click", () => deleteItem(item));
+  formInput.value = "";
+  formInput.focus();
 
-    // Work with cookies
-    items.push(itemText);
-    let itemsJSON = JSON.stringify(items);
-    const date = new Date();
-    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = `list-items=${itemsJSON}; ` + expires + "path=/";
-  }
+  // Work with cookies
+  items.push(itemText);
+  let itemsJSON = JSON.stringify(items);
+  const date = new Date();
+  date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = `list-items=${itemsJSON}; ` + expires + "path=/";
 }
 
 // Edit item
