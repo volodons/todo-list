@@ -1,7 +1,9 @@
+@import "variables";
+
 body {
   font-family: monospace;
   font-weight: bold;
-  background-color: #f1f5f8;
+  background-color: $body-background-color;
   display: flex;
   justify-content: center;
   margin-top: 4rem;
@@ -9,14 +11,14 @@ body {
 
 .list {
   width: 26rem;
-  background-color: #fff;
+  background-color: $list-background-color;
   padding: 2rem;
-  border-radius: 5px;
-  box-shadow: 0px 3px 20px -10px #000000;
+  border-radius: $border-radius;
+  box-shadow: 0px 3px 20px -10px #000;
 }
 
 .list__header {
-  color: #063251;
+  color: $list-header-text-color;
   text-align: center;
 }
 
@@ -27,24 +29,24 @@ body {
 
 .list__form-input {
   width: 100%;
-  background-color: #f1f5f8;
+  background-color: $list-form-input-background-color;
   padding: 0.5rem;
   border: none;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  color: #617d98;
+  border-top-left-radius: $border-radius;
+  border-bottom-left-radius: $border-radius;
+  color: $list-form-input-text-color;
 }
 
 .list__form-input::placeholder {
-  color: #617d98;
+  color: $list-form-input-placeholder-color;
 }
 
 .list__form-button {
-  background-color: #a5d5f8;
-  padding: 0 1rem 0 1rem;
+  background-color: $list-form-button-background-color;
+  padding: 0 1rem;
   border: none;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-top-right-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
   cursor: pointer;
 }
 
@@ -62,7 +64,7 @@ body {
 
 .list__item-text {
   margin-right: auto;
-  color: #112942;
+  color: $list-item-text-color;
 }
 
 .list__item-icon {
@@ -74,7 +76,7 @@ body {
 
 .list__footer {
   text-align: center;
-  color: #f44336;
+  color: $list-footer-text-color;
 }
 
 #deleteAllButton {
