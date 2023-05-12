@@ -47,9 +47,7 @@ function renderItems() {
         />`;
       todoItemsList.append(todoItemHTML);
       const editButton = document.getElementById(`editButton${todoItemIndex}`);
-      editButton.addEventListener("click", () =>
-        editItem(todoItemHTML, todoItemIndex)
-      );
+      editButton.addEventListener("click", () => editItem(todoItemIndex));
       const deleteButton = document.getElementById(
         `deleteButton${todoItemIndex}`
       );
@@ -75,7 +73,7 @@ function addItem(event) {
 }
 
 // Edit item
-function editItem(todoItemHTML, todoItemIndex) {
+function editItem(todoItemIndex) {
   if (!editButtonIsActivated) {
     const allIcons = document.getElementsByTagName("img");
     [...allIcons].forEach((icon) => {
@@ -87,7 +85,7 @@ function editItem(todoItemHTML, todoItemIndex) {
     form.removeEventListener("submit", addItem);
     form.addEventListener("submit", saveItem);
     formInput.focus();
-    formInput.value = todoItemHTML.querySelector(".list__item-text").innerText;
+    formInput.value = todoItems[todoItemIndex];
     formButton.innerText = "Save";
     editButtonIsActivated = true;
   }
@@ -100,7 +98,6 @@ function editItem(todoItemHTML, todoItemIndex) {
     const todoItemsJSON = JSON.stringify(todoItems);
     updateCookies(todoItemsJSON);
     renderItems();
-    todoItemHTML.querySelector(".list__item-text").innerText = todoItem;
     formButton.innerText = "Add";
     form.removeEventListener("submit", saveItem);
     form.addEventListener("submit", addItem);
