@@ -24,7 +24,8 @@ let editButtonIsActivated = false;
 function renderItems() {
   if (document.cookie.includes("todo-items=")) {
     todoItemsList.innerHTML = "";
-    todoItems = getCookies();
+    const todoCookies = getCookies();
+    todoItems = JSON.parse(todoCookies);
     for (let i = 0; i < todoItems.length; i++) {
       const todoItemIndex = todoItems.indexOf(todoItems[i]);
       const todoItemHTML = document.createElement("li");
@@ -62,8 +63,7 @@ function addItem(event) {
   if (formInput.value && !/^\s*$/.test(formInput.value)) {
     const todoItem = formInput.value;
     todoItems.push(todoItem);
-    const todoItemsJSON = JSON.stringify(todoItems);
-    updateCookies(todoItemsJSON);
+    updateCookies(todoItems);
     renderItems();
     formInput.value = "";
     formInput.focus();
@@ -93,8 +93,7 @@ function editItem(todoItemIndex) {
     event.preventDefault();
     const todoItem = formInput.value;
     todoItems[todoItemIndex] = todoItem;
-    const todoItemsJSON = JSON.stringify(todoItems);
-    updateCookies(todoItemsJSON);
+    updateCookies(todoItems);
     renderItems();
     formButton.innerText = "Add";
     form.removeEventListener("submit", saveItem);
@@ -116,8 +115,7 @@ function deleteItem(todoItemIndex) {
   if (!editButtonIsActivated) {
     delete todoItems[todoItemIndex];
     todoItems = todoItems.filter(Boolean);
-    const todoItemsJSON = JSON.stringify(todoItems);
-    updateCookies(todoItemsJSON);
+    updateCookies(todoItems);
     renderItems();
   }
 }
@@ -127,8 +125,7 @@ function deleteAllItems() {
   if (!editButtonIsActivated) {
     todoItemsList.innerHTML = "";
     todoItems = [];
-    const todoItemsJSON = JSON.stringify(todoItems);
-    updateCookies(todoItemsJSON);
+    updateCookies(todoItems);
   }
 }
 
