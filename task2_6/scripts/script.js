@@ -61,11 +61,9 @@ function renderItems() {
 }
 
 // Add new item to list
-function addItem() {
-  if (!formInput.value || /^\s*$/.test(formInput.value)) {
-    event.preventDefault();
-  } else {
-    event.preventDefault();
+function addItem(event) {
+  event.preventDefault();
+  if (formInput.value && /^\s*$/.test(formInput.value)) {
     const todoItem = formInput.value;
     todoItems.push(todoItem);
     const todoItemsJSON = JSON.stringify(todoItems);
