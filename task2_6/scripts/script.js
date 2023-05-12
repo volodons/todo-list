@@ -15,23 +15,24 @@ formInput.focus();
 form.addEventListener("submit", addItem);
 deleteAllButton.addEventListener("click", deleteAllItems);
 
+// Set name of ToDo cookies
+const todoCookiesName = "todo-items";
+
 // Set array of items
-let todoItems = [];
+let todoItems = JSON.parse(getCookies(todoCookiesName));
 
 // Set flag for editing operations
 let editButtonIsActivated = false;
 
-function renderItems() {
-  if (document.cookie.includes("todo-items=")) {
-    todoItemsList.innerHTML = "";
-    const todoCookies = getCookies();
-    todoItems = JSON.parse(todoCookies);
-    for (let i = 0; i < todoItems.length; i++) {
-      const todoItemIndex = todoItems.indexOf(todoItems[i]);
+function renderItems(items, container) {
+  if (document.cookie.includes(todoCookiesName)) {
+    container.innerHTML = "";
+    for (let i = 0; i < items.length; i++) {
+      const todoItemIndex = items.indexOf(items[i]);
       const todoItemHTML = document.createElement("li");
       todoItemHTML.classList.add("list__item");
       todoItemHTML.innerHTML = `
-      <span class="list__item-text">${todoItems[i]}</span>
+      <span class="list__item-text">${items[i]}</span>
         <img
           id="editButton${todoItemIndex}"
           class="list__item-icon"
@@ -46,7 +47,7 @@ function renderItems() {
           alt="Delete Item"
           title="Delete Item"
         />`;
-      todoItemsList.append(todoItemHTML);
+      container.append(todoItemHTML);
       const editButton = document.getElementById(`editButton${todoItemIndex}`);
       editButton.addEventListener("click", () => editItem(todoItemIndex));
       const deleteButton = document.getElementById(
@@ -63,8 +64,8 @@ function addItem(event) {
   if (formInput.value && !/^\s*$/.test(formInput.value)) {
     const todoItem = formInput.value;
     todoItems.push(todoItem);
-    updateCookies(todoItems);
-    renderItems();
+    updateCookies(todoCookiesName, todoItems);
+    renderItems(todoItems, todoItemsList);
     formInput.value = "";
     formInput.focus();
   }
@@ -93,8 +94,8 @@ function editItem(todoItemIndex) {
     event.preventDefault();
     const todoItem = formInput.value;
     todoItems[todoItemIndex] = todoItem;
-    updateCookies(todoItems);
-    renderItems();
+    updateCookies(todoCookiesName, todoItems);
+    renderItems(todoItems, todoItemsList);
     formButton.innerText = "Add";
     form.removeEventListener("submit", saveItem);
     form.addEventListener("submit", addItem);
@@ -115,8 +116,8 @@ function deleteItem(todoItemIndex) {
   if (!editButtonIsActivated) {
     delete todoItems[todoItemIndex];
     todoItems = todoItems.filter(Boolean);
-    updateCookies(todoItems);
-    renderItems();
+    updateCookies(todoCookiesName, todoItems);
+    renderItems(todoItems, todoItemsList);
   }
 }
 
@@ -125,8 +126,8 @@ function deleteAllItems() {
   if (!editButtonIsActivated) {
     todoItemsList.innerHTML = "";
     todoItems = [];
-    updateCookies(todoItems);
+    updateCookies(todoCookiesName, todoItems);
   }
 }
 
-renderItems();
+renderItems(todoItems, todoItemsList);
