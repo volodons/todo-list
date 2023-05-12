@@ -48,8 +48,8 @@ body {
   cursor: pointer;
 }
 
-.list-items-wrapper {
-  padding: 0;
+.list__items-wrapper {
+  padding-left: 0;
   margin-top: 1rem;
 }
 

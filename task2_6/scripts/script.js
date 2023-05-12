@@ -1,10 +1,11 @@
-"use strict";
+// Import cookies.js module to work with cookies
+import { getCookies, updateCookies } from "./cookies.js";
 
 // Select input and buttons
 const form = document.getElementById("form");
 const formInput = document.getElementById("formInput");
 const formButton = document.getElementById("formButton");
-const listItems = document.getElementById("listItems");
+const todoItemsList = document.getElementById("listItems");
 const deleteAllButton = document.getElementById("deleteAllButton");
 
 // Set initial input focus
@@ -14,110 +15,94 @@ formInput.focus();
 form.addEventListener("submit", addItem);
 deleteAllButton.addEventListener("click", deleteAllItems);
 
-// Set counter for each new item
-let counter = 0;
-
 // Set array of items
-let items = [];
+let todoItems = [];
 
-function initialItemRender() {
-  let allCookies = document.cookie.split(";");
-  let itemsCookies = allCookies.find((cookie) =>
-    cookie.trim().startsWith("list-items=")
-  );
-  let itemsCookiesJSON = itemsCookies.split("=")[1];
-  let items = JSON.parse(itemsCookiesJSON);
-  for (let i = 0; i < items.length; i++) {
-    let item = document.createElement("li");
-    item.classList.add("list__item");
-    item.innerHTML = `        
-      <span class="list__item-text">${items[i]}</span>
-      <img
-        id="editButton${i}"
-        class="list__item-icon"
-        src="./images/icon-edit.svg"
-        alt="Edit Item"
-        title="Edit Item"
-      />
-      <img
-        id="deleteButton${i}"
-        class="list__item-icon"
-        src="./images/icon-delete.svg"
-        alt="Delete Item"
-        title="Delete Item"
-      />`;
-    listItems.append(item);
-    const editButton = document.getElementById(`editButton${i}`);
-    editButton.addEventListener("click", () => editItem(item));
-    const deleteButton = document.getElementById(`deleteButton${i}`);
-    deleteButton.addEventListener("click", () => deleteItem(item));
+// Set flag for editing operations
+let editButtonIsActivated = false;
+
+function renderItems() {
+  if (document.cookie.includes("todo-items=")) {
+    todoItemsList.innerHTML = "";
+    todoItems = getCookies();
+    for (let i = 0; i < todoItems.length; i++) {
+      const todoItemIndex = todoItems.indexOf(todoItems[i]);
+      const todoItemHTML = document.createElement("li");
+      todoItemHTML.classList.add("list__item");
+      todoItemHTML.innerHTML = `
+      <span class="list__item-text">${todoItems[i]}</span>
+        <img
+          id="editButton${todoItemIndex}"
+          class="list__item-icon"
+          src="./images/icon-edit.svg"
+          alt="Edit Item"
+          title="Edit Item"
+        />
+        <img
+          id="deleteButton${todoItemIndex}"
+          class="list__item-icon"
+          src="./images/icon-delete.svg"
+          alt="Delete Item"
+          title="Delete Item"
+        />`;
+      todoItemsList.append(todoItemHTML);
+      const editButton = document.getElementById(`editButton${todoItemIndex}`);
+      editButton.addEventListener("click", () =>
+        editItem(todoItemHTML, todoItemIndex)
+      );
+      const deleteButton = document.getElementById(
+        `deleteButton${todoItemIndex}`
+      );
+      deleteButton.addEventListener("click", () =>
+        deleteItem(todoItemHTML, todoItemIndex)
+      );
+    }
   }
 }
-
-initialItemRender();
 
 // Add new item to list
 function addItem() {
-  if (!formInput.value || /^\s+$/.test(formInput.value)) {
+  if (!formInput.value || /^\s*$/.test(formInput.value)) {
     event.preventDefault();
+  } else {
+    event.preventDefault();
+    const todoItem = formInput.value;
+    todoItems.push(todoItem);
+    const todoItemsJSON = JSON.stringify(todoItems);
+    updateCookies(todoItemsJSON);
+    renderItems();
+    formInput.value = "";
+    formInput.focus();
   }
-  event.preventDefault();
-  counter++;
-  let itemText = formInput.value;
-  let item = document.createElement("li");
-  item.id = `item${counter}`;
-  item.classList.add("list__item");
-  item.innerHTML = `        
-    <span class="list__item-text">${itemText}</span>
-    <img
-      id="editButton${counter}"
-      class="list__item-icon"
-      src="./images/icon-edit.svg"
-      alt="Edit Item"
-      title="Edit Item"
-    />
-    <img
-      id="deleteButton${counter}"
-      class="list__item-icon"
-      src="./images/icon-delete.svg"
-      alt="Delete Item"
-      title="Delete Item"
-    />`;
-  listItems.append(item);
-  const editButton = document.getElementById(`editButton${counter}`);
-  editButton.addEventListener("click", () => editItem(item));
-  const deleteButton = document.getElementById(`deleteButton${counter}`);
-  deleteButton.addEventListener("click", () => deleteItem(item));
-  formInput.value = "";
-  formInput.focus();
-
-  // Work with cookies
-  items.push(itemText);
-  let itemsJSON = JSON.stringify(items);
-  const date = new Date();
-  date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = `list-items=${itemsJSON}; ` + expires + "path=/";
 }
 
 // Edit item
-function editItem(item) {
-  const allIcons = document.getElementsByTagName("img");
-  [...allIcons].forEach((icon) => {
-    icon.style.filter = "grayscale(100%)";
-    icon.style.cursor = "not-allowed";
-  });
-  form.removeEventListener("submit", addItem);
-  form.addEventListener("submit", saveItem);
-  formInput.focus();
-  formInput.value = item.querySelector(".list__item-text").innerText;
-  formButton.innerText = "Save";
+function editItem(todoItemHTML, todoItemIndex) {
+  if (!editButtonIsActivated) {
+    const allIcons = document.getElementsByTagName("img");
+    [...allIcons].forEach((icon) => {
+      icon.style.filter = "grayscale(100%)";
+      icon.style.cursor = "not-allowed";
+    });
+    deleteAllButton.style.filter = "grayscale(100%)";
+    deleteAllButton.style.cursor = "not-allowed";
+    form.removeEventListener("submit", addItem);
+    form.addEventListener("submit", saveItem);
+    formInput.focus();
+    formInput.value = todoItemHTML.querySelector(".list__item-text").innerText;
+    formButton.innerText = "Save";
+    editButtonIsActivated = true;
+  }
 
   // Save edited item
   function saveItem() {
     event.preventDefault();
-    let itemText = formInput.value;
-    item.querySelector(".list__item-text").innerText = itemText;
+    const todoItem = formInput.value;
+    todoItems[todoItemIndex] = todoItem;
+    const todoItemsJSON = JSON.stringify(todoItems);
+    updateCookies(todoItemsJSON);
+    renderItems();
+    todoItemHTML.querySelector(".list__item-text").innerText = todoItem;
     formButton.innerText = "Add";
     form.removeEventListener("submit", saveItem);
     form.addEventListener("submit", addItem);
@@ -126,19 +111,33 @@ function editItem(item) {
       icon.style.filter = "none";
       icon.style.cursor = "pointer";
     });
+    deleteAllButton.style.filter = "none";
+    deleteAllButton.style.cursor = "pointer";
     formInput.value = "";
+    editButtonIsActivated = false;
   }
 }
 
 // Delete item from a list
-function deleteItem(item) {
-  counter--;
-  item.remove();
+function deleteItem(todoItemHTML, todoItemIndex) {
+  if (!editButtonIsActivated) {
+    todoItemHTML.remove();
+    delete todoItems[todoItemIndex];
+    todoItems = todoItems.filter(Boolean);
+    const todoItemsJSON = JSON.stringify(todoItems);
+    updateCookies(todoItemsJSON);
+    renderItems();
+  }
 }
 
 // Delete all items in list
 function deleteAllItems() {
-  counter = 0;
-  listItems.innerHTML = "";
-  document.cookie = `list-items=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  if (!editButtonIsActivated) {
+    todoItemsList.innerHTML = "";
+    todoItems = [];
+    const todoItemsJSON = JSON.stringify(todoItems);
+    updateCookies(todoItemsJSON);
+  }
 }
+
+renderItems();
