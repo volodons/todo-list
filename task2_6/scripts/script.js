@@ -51,9 +51,7 @@ function renderItems() {
       const deleteButton = document.getElementById(
         `deleteButton${todoItemIndex}`
       );
-      deleteButton.addEventListener("click", () =>
-        deleteItem(todoItemHTML, todoItemIndex)
-      );
+      deleteButton.addEventListener("click", () => deleteItem(todoItemIndex));
     }
   }
 }
@@ -114,9 +112,8 @@ function editItem(todoItemIndex) {
 }
 
 // Delete item from a list
-function deleteItem(todoItemHTML, todoItemIndex) {
+function deleteItem(todoItemIndex) {
   if (!editButtonIsActivated) {
-    todoItemHTML.remove();
     delete todoItems[todoItemIndex];
     todoItems = todoItems.filter(Boolean);
     const todoItemsJSON = JSON.stringify(todoItems);
