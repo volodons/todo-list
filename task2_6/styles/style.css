@@ -40,12 +40,12 @@ body {
 }
 
 .list__form-button {
+  cursor: pointer;
   background-color: #a5d5f8;
   padding: 0 1rem;
   border: none;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-  cursor: pointer;
 }
 
 .list__items-wrapper {
@@ -66,10 +66,15 @@ body {
 }
 
 .list__item-icon {
+  cursor: pointer;
   width: 1rem;
   height: 1rem;
   margin-left: 0.5rem;
-  cursor: pointer;
+}
+
+.list__item-icon--inactive {
+  cursor: not-allowed;
+  filter: grayscale(100%);
 }
 
 .list__footer {
@@ -77,6 +82,11 @@ body {
   color: #f44336;
 }
 
-#deleteAllButton {
+.list__footer-button {
   cursor: pointer;
+}
+
+.list__footer-button--inactive {
+  cursor: not-allowed;
+  filter: grayscale(100%);
 }/*# sourceMappingURL=style.css.map */

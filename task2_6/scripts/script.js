@@ -6,7 +6,7 @@ const form = document.getElementById("form");
 const formInput = document.getElementById("formInput");
 const formButton = document.getElementById("formButton");
 const todoItemsList = document.getElementById("listItems");
-const deleteAllButton = document.getElementById("deleteAllButton");
+const deleteAllButton = document.querySelector(".list__footer-button");
 
 // Set initial input focus
 formInput.focus();
@@ -84,13 +84,11 @@ function addItem(item, items, container, cookiesName) {
 // Edit item
 function editItem(items, container, itemIndex, cookiesName) {
   if (!editButtonIsActivated) {
-    const allIcons = document.getElementsByTagName("img");
+    const allIcons = document.getElementsByClassName("list__item-icon");
     [...allIcons].forEach((icon) => {
-      icon.style.filter = "grayscale(100%)";
-      icon.style.cursor = "not-allowed";
+      icon.classList.add("list__item-icon--inactive");
     });
-    deleteAllButton.style.filter = "grayscale(100%)";
-    deleteAllButton.style.cursor = "not-allowed";
+    deleteAllButton.classList.add("list__footer-button--inactive");
     form.removeEventListener("submit", addItem);
     form.addEventListener("submit", saveItem);
     formInput.focus();
@@ -110,13 +108,11 @@ function editItem(items, container, itemIndex, cookiesName) {
     formButton.innerText = "Add";
     form.removeEventListener("submit", saveItem);
     form.addEventListener("submit", addItem);
-    const allIcons = document.getElementsByTagName("img");
+    const allIcons = document.getElementsByClassName("list__item-icon");
     [...allIcons].forEach((icon) => {
-      icon.style.filter = "none";
-      icon.style.cursor = "pointer";
+      icon.classList.remove("list__item-icon--inactive");
     });
-    deleteAllButton.style.filter = "none";
-    deleteAllButton.style.cursor = "pointer";
+    deleteAllButton.classList.remove("list__footer-button--inactive");
     formInput.value = "";
     editButtonIsActivated = false;
   }
