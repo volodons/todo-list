@@ -1,3 +1,4 @@
+// Get cookies from cookie storage/create new cookies
 function getCookies(name) {
   if (document.cookie.includes(name + "=")) {
     const cookies = document.cookie
@@ -20,6 +21,7 @@ function getCookies(name) {
   }
 }
 
+// Update existing cookies
 function updateCookies(name, value) {
   const cookies = JSON.stringify(value);
   const date = new Date();

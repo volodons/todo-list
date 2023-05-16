@@ -12,12 +12,8 @@ const deleteAllButton = document.querySelector(".list__footer-button");
 formInput.focus();
 
 // Add event listeners to form and button
-form.addEventListener("submit", (event) =>
-  getInput(event, todoItems, todoItemsList, todoCookiesName)
-);
-deleteAllButton.addEventListener("click", () =>
-  deleteAllItems(todoItems, todoItemsList, todoCookiesName)
-);
+form.addEventListener("submit", (event) => onAddItem(event));
+deleteAllButton.addEventListener("click", () => deleteAllItems());
 
 // Set name of ToDo cookies
 const todoCookiesName = "todo-items";
@@ -28,14 +24,15 @@ let todoItems = JSON.parse(getCookies(todoCookiesName));
 // Set flag for editing operations
 let editButtonIsActivated = false;
 
-function renderItems(items, container, cookiesName) {
-  container.innerHTML = "";
-  for (let i = 0; i < items.length; i++) {
+// Render (or re-render) items
+function renderItems(todoItems) {
+  todoItemsList.innerHTML = "";
+  for (let i = 0; i < todoItems.length; i++) {
     const itemIndex = i;
     const itemHTML = document.createElement("li");
     itemHTML.classList.add("list__item");
     itemHTML.innerHTML = `
-      <span class="list__item-text">${items[i]}</span>
+      <span class="list__item-text">${todoItems[i]}</span>
         <img
           id="editButton${itemIndex}"
           class="list__item-icon"
@@ -50,91 +47,93 @@ function renderItems(items, container, cookiesName) {
           alt="Delete Item"
           title="Delete Item"
         />`;
-    container.append(itemHTML);
+    todoItemsList.append(itemHTML);
     const editButton = document.getElementById(`editButton${itemIndex}`);
-    editButton.addEventListener("click", () =>
-      editItem(items, container, itemIndex, cookiesName)
-    );
+    editButton.addEventListener("click", () => onClickEdit(itemIndex));
     const deleteButton = document.getElementById(`deleteButton${itemIndex}`);
-    deleteButton.addEventListener("click", () =>
-      deleteItem(items, container, itemIndex, cookiesName)
-    );
+    deleteButton.addEventListener("click", () => deleteItem(itemIndex));
   }
 }
 
 // Get data from client input
-function getInput(event, items, container, cookiesName) {
+function onAddItem(event) {
   event.preventDefault();
   if (formInput.value && !/^\s*$/.test(formInput.value)) {
     const formData = new FormData(event.target);
-    const input = formData.get("item");
+    const newItem = formData.get("item");
     formInput.value = "";
     formInput.focus();
-    addItem(input, items, container, cookiesName);
+    addItem(newItem);
   }
 }
 
 // Add new item to list
-function addItem(item, items, container, cookiesName) {
-  todoItems.push(item);
-  updateCookies(cookiesName, items);
-  renderItems(items, container, cookiesName);
+function addItem(newItem) {
+  todoItems.push(newItem);
+  updateCookies(todoCookiesName, todoItems);
+  renderItems(todoItems);
 }
 
-// Edit item
-function editItem(items, container, itemIndex, cookiesName) {
+// Handle click event on Edit Button
+function onClickEdit(itemIndex) {
   if (!editButtonIsActivated) {
     const allIcons = document.getElementsByClassName("list__item-icon");
     [...allIcons].forEach((icon) => {
       icon.classList.add("list__item-icon--inactive");
     });
     deleteAllButton.classList.add("list__footer-button--inactive");
-    form.removeEventListener("submit", addItem);
-    form.addEventListener("submit", saveItem);
+    form.removeEventListener("submit", (event) => onAddItem(event));
+    form.addEventListener("submit", (event) => onEditItem(event, itemIndex));
     formInput.focus();
-    formInput.value = items[itemIndex];
+    formInput.value = todoItems[itemIndex];
     formButton.innerText = "Save";
     editButtonIsActivated = true;
   }
+}
 
-  // Save edited item
-  function saveItem(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const item = formData.get("item");
-    items[itemIndex] = item;
-    updateCookies(cookiesName, items);
-    renderItems(items, container);
-    formButton.innerText = "Add";
-    form.removeEventListener("submit", saveItem);
-    form.addEventListener("submit", addItem);
-    const allIcons = document.getElementsByClassName("list__item-icon");
-    [...allIcons].forEach((icon) => {
-      icon.classList.remove("list__item-icon--inactive");
-    });
-    deleteAllButton.classList.remove("list__footer-button--inactive");
-    formInput.value = "";
-    editButtonIsActivated = false;
-  }
+// Handle click event on Save Button
+function onEditItem(event, itemIndex) {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const newValue = formData.get("item");
+  editItem(itemIndex, newValue);
+  form.removeEventListener("submit", (event) => onEditItem(event, itemIndex));
+  form.addEventListener("submit", (event) => onAddItem(event));
+  const allIcons = document.getElementsByClassName("list__item-icon");
+  [...allIcons].forEach((icon) => {
+    icon.classList.remove("list__item-icon--inactive");
+  });
+  deleteAllButton.classList.remove("list__footer-button--inactive");
+  formInput.value = "";
+  formButton.innerText = "Add";
+  editButtonIsActivated = false;
+}
+
+// Edit item
+function editItem(itemIndex, newValue) {
+  todoItems[itemIndex] = newValue;
+  updateCookies(todoCookiesName, todoItems);
+  renderItems(todoItems);
 }
 
 // Delete item from a list
-function deleteItem(items, itemsList, itemIndex, cookiesName) {
+function deleteItem(itemIndex) {
   if (!editButtonIsActivated) {
-    delete items[itemIndex];
-    items = items.filter(Boolean);
-    updateCookies(cookiesName, items);
-    renderItems(items, itemsList);
+    delete todoItems[itemIndex];
+    const filteredTodoItems = todoItems.filter(Boolean);
+    updateCookies(todoCookiesName, filteredTodoItems);
+    renderItems(filteredTodoItems);
   }
 }
 
 // Delete all items in list
-function deleteAllItems(items, itemsList, cookiesName) {
+function deleteAllItems() {
   if (!editButtonIsActivated) {
-    itemsList.innerHTML = "";
-    items = [];
-    updateCookies(cookiesName, items);
+    todoItemsList.innerHTML = "";
+    todoItems = [];
+    updateCookies(todoCookiesName, todoItems);
   }
 }
 
-renderItems(todoItems, todoItemsList, todoCookiesName);
+// Initial call of function to render all items from cookies (in case there are any)
+renderItems(todoItems);
