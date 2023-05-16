@@ -1,6 +1,11 @@
 // Import cookies.js module to work with cookies
 import { getCookies, updateCookies } from "./cookies.js";
 
+// Set app's state
+const state = {
+  editItemIndex: "",
+};
+
 // Select input and buttons
 const form = document.getElementById("form");
 const formInput = document.getElementById("formInput");
@@ -12,7 +17,7 @@ const deleteAllButton = document.querySelector(".list__footer-button");
 formInput.focus();
 
 // Add event listeners to form and button
-form.addEventListener("submit", (event) => onAddItem(event));
+form.addEventListener("submit", onAddItem);
 deleteAllButton.addEventListener("click", () => deleteAllItems());
 
 // Set name of ToDo cookies
@@ -20,9 +25,6 @@ const todoCookiesName = "todo-items";
 
 // Set array of items
 let todoItems = JSON.parse(getCookies(todoCookiesName));
-
-// Set flag for editing operations
-let editButtonIsActivated = false;
 
 // Render (or re-render) items
 function renderItems(todoItems) {
@@ -76,29 +78,29 @@ function addItem(newItem) {
 
 // Handle click event on Edit Button
 function onClickEdit(itemIndex) {
-  if (!editButtonIsActivated) {
+  if (state.editItemIndex === "") {
+    state.editItemIndex = itemIndex;
     const allIcons = document.getElementsByClassName("list__item-icon");
     [...allIcons].forEach((icon) => {
       icon.classList.add("list__item-icon--inactive");
     });
     deleteAllButton.classList.add("list__footer-button--inactive");
-    form.removeEventListener("submit", (event) => onAddItem(event));
-    form.addEventListener("submit", (event) => onEditItem(event, itemIndex));
+    form.removeEventListener("submit", onAddItem);
+    form.addEventListener("submit", onEditItem);
     formInput.focus();
     formInput.value = todoItems[itemIndex];
     formButton.innerText = "Save";
-    editButtonIsActivated = true;
   }
 }
 
 // Handle click event on Save Button
-function onEditItem(event, itemIndex) {
+function onEditItem(event) {
   event.preventDefault();
   const formData = new FormData(event.target);
   const newValue = formData.get("item");
-  editItem(itemIndex, newValue);
-  form.removeEventListener("submit", (event) => onEditItem(event, itemIndex));
-  form.addEventListener("submit", (event) => onAddItem(event));
+  editItem(state.editItemIndex, newValue);
+  form.removeEventListener("submit", onEditItem);
+  form.addEventListener("submit", onAddItem);
   const allIcons = document.getElementsByClassName("list__item-icon");
   [...allIcons].forEach((icon) => {
     icon.classList.remove("list__item-icon--inactive");
@@ -106,7 +108,7 @@ function onEditItem(event, itemIndex) {
   deleteAllButton.classList.remove("list__footer-button--inactive");
   formInput.value = "";
   formButton.innerText = "Add";
-  editButtonIsActivated = false;
+  state.editItemIndex = "";
 }
 
 // Edit item
@@ -118,7 +120,7 @@ function editItem(itemIndex, newValue) {
 
 // Delete item from a list
 function deleteItem(itemIndex) {
-  if (!editButtonIsActivated) {
+  if (state.editItemIndex === "") {
     delete todoItems[itemIndex];
     const filteredTodoItems = todoItems.filter(Boolean);
     updateCookies(todoCookiesName, filteredTodoItems);
@@ -128,7 +130,7 @@ function deleteItem(itemIndex) {
 
 // Delete all items in list
 function deleteAllItems() {
-  if (!editButtonIsActivated) {
+  if (state.editItemIndex === "") {
     todoItemsList.innerHTML = "";
     todoItems = [];
     updateCookies(todoCookiesName, todoItems);
