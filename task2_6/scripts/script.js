@@ -22,10 +22,7 @@ formInput.focus();
 
 // Add event listeners to form and button
 form.addEventListener("submit", onAddItem);
-deleteAllButton.addEventListener("click", () => deleteAllItems());
-
-// // Set array of items
-// let todoItems = JSON.parse(getCookies(todoCookiesName));
+deleteAllButton.addEventListener("click", deleteAllItems);
 
 // Render (or re-render) items
 function renderItems(todoItems) {
