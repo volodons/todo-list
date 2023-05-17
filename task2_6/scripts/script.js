@@ -25,14 +25,14 @@ form.addEventListener("submit", onAddItem);
 deleteAllButton.addEventListener("click", deleteAllItems);
 
 // Render (or re-render) items
-function renderItems(todoItems) {
-  todoItemsList.innerHTML = "";
-  for (let i = 0; i < todoItems.length; i++) {
+function renderItems(items, container) {
+  container.innerHTML = "";
+  for (let i = 0; i < items.length; i++) {
     const itemIndex = i;
     const itemHTML = document.createElement("li");
     itemHTML.classList.add("list__item");
     itemHTML.innerHTML = `
-      <span class="list__item-text">${todoItems[i]}</span>
+      <span class="list__item-text">${items[i]}</span>
         <img
           id="editButton${itemIndex}"
           class="list__item-icon"
@@ -47,7 +47,7 @@ function renderItems(todoItems) {
           alt="Delete Item"
           title="Delete Item"
         />`;
-    todoItemsList.append(itemHTML);
+    container.append(itemHTML);
     const editButton = document.getElementById(`editButton${itemIndex}`);
     editButton.addEventListener("click", () => onClickEdit(itemIndex));
     const deleteButton = document.getElementById(`deleteButton${itemIndex}`);
@@ -71,7 +71,7 @@ function onAddItem(event) {
 function addItem(newItem) {
   state.todoItems.push(newItem);
   updateCookies(todoCookiesName, state.todoItems);
-  renderItems(state.todoItems);
+  renderItems(state.todoItems, todoItemsList);
 }
 
 // Handle click event on Edit Button
@@ -113,7 +113,7 @@ function onEditItem(event) {
 function editItem(itemIndex, newValue) {
   state.todoItems[itemIndex] = newValue;
   updateCookies(todoCookiesName, state.todoItems);
-  renderItems(state.todoItems);
+  renderItems(state.todoItems, todoItemsList);
 }
 
 // Delete item from a list
@@ -122,18 +122,18 @@ function deleteItem(itemIndex) {
     delete state.todoItems[itemIndex];
     const filteredTodoItems = state.todoItems.filter(Boolean);
     updateCookies(todoCookiesName, filteredTodoItems);
-    renderItems(filteredTodoItems);
+    renderItems(filteredTodoItems, todoItemsList);
   }
 }
 
 // Delete all items in list
 function deleteAllItems() {
   if (state.editItemIndex === "") {
-    todoItemsList.innerHTML = "";
     state.todoItems = [];
     updateCookies(todoCookiesName, state.todoItems);
+    renderItems(state.todoItems, todoItemsList);
   }
 }
 
 // Initial call of function to render all items from cookies (in case there are any)
-renderItems(state.todoItems);
+renderItems(state.todoItems, todoItemsList);
